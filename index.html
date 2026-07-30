@@ -241,11 +241,24 @@
   .cta-panel h3{font-size:1.2rem; margin-bottom:12px;}
   .cta-panel p{color:#c8c5ba; margin-bottom:24px; font-size:0.94rem;}
 
+  .social-row{
+    display:flex; gap:14px; margin-top:24px;
+  }
+  .social-link{
+    padding:10px 18px; border:1px solid var(--line); border-radius:2px;
+    font-family:'Oswald'; font-size:0.82rem; text-transform:uppercase; letter-spacing:0.04em;
+    text-decoration:none; color:var(--paper); transition:border-color .2s, color .2s;
+  }
+  .social-link:hover{border-color:var(--yellow); color:var(--yellow);}
+
   footer{
     padding:32px 0; border-top:1px solid var(--line);
     display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;
     font-size:0.8rem; color:var(--grey);
   }
+  .footer-socials{display:flex; gap:18px;}
+  .footer-socials a{color:var(--grey); text-decoration:none; transition:color .2s;}
+  .footer-socials a:hover{color:var(--yellow);}
 
   @media (max-width: 860px){
     .hero-grid, .om-grid, .contact-grid{grid-template-columns:1fr;}
@@ -515,12 +528,23 @@
           </div>
         </div>
         <div class="contact-item">
+          <div class="ic">✆</div>
+          <div>
+            <div class="k">WhatsApp</div>
+            <div class="v"><a href="https://wa.me/420731705745" target="_blank" rel="noopener">731 705 745</a></div>
+          </div>
+        </div>
+        <div class="contact-item">
           <div class="ic">◎</div>
           <div>
             <div class="k">Působnost</div>
             <div class="v">Moravskoslezský, Olomoucký a Zlínský kraj, delší vzdálenosti po domluvě</div>
           </div>
         </div>
+      </div>
+      <div class="social-row">
+        <a href="https://www.instagram.com/lukasdybarevizezz?igsh=NDZ0b2owMTI3MWxq" target="_blank" rel="noopener" class="social-link">Instagram</a>
+        <a href="https://www.tiktok.com/@lukasdybarevizezz?_r=1&_t=ZN-98SzEeAF4SM" target="_blank" rel="noopener" class="social-link">TikTok</a>
       </div>
     </div>
     <div class="cta-panel">
@@ -533,6 +557,11 @@
 
 <footer class="wrap">
   <div>© <span id="year"></span> Lukáš Dyba — Revizní technik zdvihacích zařízení</div>
+  <div class="footer-socials">
+    <a href="https://www.instagram.com/lukasdybarevizezz?igsh=NDZ0b2owMTI3MWxq" target="_blank" rel="noopener">Instagram</a>
+    <a href="https://www.tiktok.com/@lukasdybarevizezz?_r=1&_t=ZN-98SzEeAF4SM" target="_blank" rel="noopener">TikTok</a>
+    <a href="https://wa.me/420731705745" target="_blank" rel="noopener">WhatsApp</a>
+  </div>
   <div>Ev. č. TIČR 1237/26 · Skupiny B, B1</div>
 </footer>
 
