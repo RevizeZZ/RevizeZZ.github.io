@@ -243,6 +243,11 @@
   .region-list li{display:flex; align-items:center; gap:12px; font-family:'IBM Plex Mono'; font-size:0.92rem; color:#d8d5c9;}
   .region-list .dot{width:9px; height:9px; border-radius:50%; background:var(--yellow); flex-shrink:0;}
   .map-visual svg{width:100%; height:auto; display:block;}
+  .kraj-off{fill:var(--charcoal-2); stroke:rgba(244,183,26,0.15); stroke-width:1.5;}
+  .kraj-on{fill:var(--yellow); stroke:#ffcc3d; stroke-width:1.5;}
+  .kraj-label{font-family:'IBM Plex Mono', monospace; font-size:15px; font-weight:600; fill:var(--black);}
+  .kraj-name{font-family:'Oswald', sans-serif; font-size:12px; font-weight:600; fill:#d8d5c9; text-transform:uppercase; letter-spacing:0.03em;}
+  .map-legend{font-family:'IBM Plex Mono', monospace; font-size:11px; fill:var(--grey);}
   @media (max-width:860px){.map-grid{grid-template-columns:1fr;}}
 
   /* KONTAKT */
@@ -546,30 +551,34 @@
       </ul>
     </div>
     <div class="map-visual">
-      <svg viewBox="0 0 520 420" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mapa působnosti">
-        <circle cx="260" cy="210" r="190" fill="none" stroke="rgba(244,183,26,0.12)" stroke-width="1" stroke-dasharray="4 6"/>
-        <circle cx="260" cy="210" r="130" fill="none" stroke="rgba(244,183,26,0.22)" stroke-width="1" stroke-dasharray="4 6"/>
-        <circle cx="260" cy="210" r="70" fill="rgba(244,183,26,0.06)" stroke="var(--yellow)" stroke-width="1.5" stroke-dasharray="3 5"/>
+      <svg viewBox="0 0 580 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Mapa krajů České republiky s vyznačenou působností">
+        <!-- ostatní kraje (neaktivní) -->
+        <polygon points="89.4,103.0 89.4,137.0 60.0,154.0 30.6,137.0 30.6,103.0 60.0,86.0" class="kraj-off"/>
+        <polygon points="179.4,48.0 179.4,82.0 150.0,99.0 120.6,82.0 120.6,48.0 150.0,31.0" class="kraj-off"/>
+        <polygon points="279.4,38.0 279.4,72.0 250.0,89.0 220.6,72.0 220.6,38.0 250.0,21.0" class="kraj-off"/>
+        <polygon points="144.4,178.0 144.4,212.0 115.0,229.0 85.6,212.0 85.6,178.0 115.0,161.0" class="kraj-off"/>
+        <polygon points="259.4,148.0 259.4,182.0 230.0,199.0 200.6,182.0 200.6,148.0 230.0,131.0" class="kraj-off"/>
+        <polygon points="369.4,58.0 369.4,92.0 340.0,109.0 310.6,92.0 310.6,58.0 340.0,41.0" class="kraj-off"/>
+        <polygon points="384.4,133.0 384.4,167.0 355.0,184.0 325.6,167.0 325.6,133.0 355.0,116.0" class="kraj-off"/>
+        <polygon points="339.4,218.0 339.4,252.0 310.0,269.0 280.6,252.0 280.6,218.0 310.0,201.0" class="kraj-off"/>
+        <polygon points="224.4,258.0 224.4,292.0 195.0,309.0 165.6,292.0 165.6,258.0 195.0,241.0" class="kraj-off"/>
+        <polygon points="429.4,268.0 429.4,302.0 400.0,319.0 370.6,302.0 370.6,268.0 400.0,251.0" class="kraj-off"/>
+        <circle cx="230" cy="165" r="6" fill="var(--charcoal)" stroke="var(--grey)" stroke-width="1"/>
 
-        <line x1="260" y1="210" x2="150" y2="120" stroke="rgba(244,183,26,0.35)" stroke-width="1.5"/>
-        <line x1="260" y1="210" x2="380" y2="110" stroke="rgba(244,183,26,0.35)" stroke-width="1.5"/>
-        <line x1="260" y1="210" x2="330" y2="330" stroke="rgba(244,183,26,0.35)" stroke-width="1.5"/>
+        <!-- tři kraje v působnosti -->
+        <polygon points="489.6,140.0 489.6,180.0 455.0,200.0 420.4,180.0 420.4,140.0 455.0,120.0" class="kraj-on"/>
+        <polygon points="559.6,65.0 559.6,105.0 525.0,125.0 490.4,105.0 490.4,65.0 525.0,45.0" class="kraj-on"/>
+        <polygon points="519.6,225.0 519.6,265.0 485.0,285.0 450.4,265.0 450.4,225.0 485.0,205.0" class="kraj-on"/>
 
-        <circle cx="150" cy="120" r="6" fill="var(--yellow)"/>
-        <circle cx="380" cy="110" r="6" fill="var(--yellow)"/>
-        <circle cx="330" cy="330" r="6" fill="var(--yellow)"/>
+        <text x="455" y="164" text-anchor="middle" class="kraj-label">OL</text>
+        <text x="525" y="89" text-anchor="middle" class="kraj-label">MS</text>
+        <text x="485" y="249" text-anchor="middle" class="kraj-label">ZL</text>
 
-        <g transform="translate(260,210)">
-          <circle r="11" fill="var(--black)" stroke="var(--yellow)" stroke-width="2.5"/>
-          <circle r="3.5" fill="var(--yellow)"/>
-        </g>
-        <text x="260" y="248" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="#c8c5ba">OSTRAVA</text>
+        <text x="455" y="212" text-anchor="middle" class="kraj-name" data-i18n="map_olk">Olomoucký</text>
+        <text x="525" y="137" text-anchor="middle" class="kraj-name" data-i18n="map_msk">Moravskoslezský</text>
+        <text x="485" y="297" text-anchor="middle" class="kraj-name" data-i18n="map_zlk">Zlínský</text>
 
-        <text x="150" y="102" text-anchor="middle" font-family="Oswald, sans-serif" font-size="15" font-weight="600" fill="#f2efe6" letter-spacing="0.02em" data-i18n="map_msk">MORAVSKOSLEZSKÝ</text>
-        <text x="380" y="92" text-anchor="middle" font-family="Oswald, sans-serif" font-size="15" font-weight="600" fill="#f2efe6" letter-spacing="0.02em" data-i18n="map_olk">OLOMOUCKÝ</text>
-        <text x="330" y="352" text-anchor="middle" font-family="Oswald, sans-serif" font-size="15" font-weight="600" fill="#f2efe6" letter-spacing="0.02em" data-i18n="map_zlk">ZLÍNSKÝ</text>
-
-        <text x="260" y="405" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="11" fill="var(--grey)" data-i18n="map_note">delší vzdálenosti po domluvě</text>
+        <text x="20" y="330" class="map-legend" data-i18n="map_note">delší vzdálenosti po domluvě</text>
       </svg>
     </div>
   </div>
