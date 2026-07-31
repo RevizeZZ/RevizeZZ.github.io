@@ -243,12 +243,9 @@
   .region-list li{display:flex; align-items:center; gap:12px; font-family:'IBM Plex Mono'; font-size:0.92rem; color:#d8d5c9;}
   .region-list .dot{width:9px; height:9px; border-radius:50%; background:var(--yellow); flex-shrink:0;}
   .map-visual svg{width:100%; height:auto; display:block;}
-  .real-map-frame{
-    width:100%; aspect-ratio: 4/3; border-radius:6px; overflow:hidden;
-    border:1px solid var(--line);
-    filter: grayscale(0.25) contrast(1.05);
-  }
-  @media (max-width:860px){.real-map-frame{aspect-ratio:16/11;}}
+  .real-map-svg{width:100%;}
+  .real-map-svg svg{width:100%; height:auto; display:block;}
+  .map-loading{padding:60px 20px; text-align:center; color:var(--grey); font-family:'IBM Plex Mono', monospace; font-size:0.85rem;}
   @media (max-width:860px){.map-grid{grid-template-columns:1fr;}}
 
   /* KONTAKT */
@@ -552,17 +549,99 @@
       </ul>
     </div>
     <div class="map-visual">
-      <div class="real-map-frame">
-        <iframe
-          src="https://www.google.com/maps?q=49.7,17.6&z=8&output=embed"
-          width="100%" height="100%" style="border:0;"
-          allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
-          title="Mapa oblasti působnosti">
-        </iframe>
-      </div>
+      <div id="realMap" class="real-map-svg"><div class="map-loading">Načítám mapu…</div></div>
     </div>
   </div>
 </section>
+
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/topojson-client@3/dist/topojson-client.min.js"></script>
+<script>
+(function(){
+  var container = document.getElementById('realMap');
+  var width = 700, height = 420;
+  var targetNames = ['moravskoslezsk','olomouck','zlínsk','zlinsk'];
+
+  function isTarget(name){
+    if(!name) return false;
+    var n = name.toLowerCase();
+    return targetNames.some(function(t){ return n.indexOf(t) !== -1; });
+  }
+
+  fetch('https://raw.githubusercontent.com/deldersveld/topojson/master/countries/czech-republic/czech-republic-regions.json')
+    .then(function(r){ return r.json(); })
+    .then(function(topology){
+      var objKey = Object.keys(topology.objects)[0];
+      var geo = topojson.feature(topology, topology.objects[objKey]);
+
+      var svg = d3.select(container).append('svg')
+        .attr('viewBox', '0 0 ' + width + ' ' + height)
+        .attr('role', 'img')
+        .attr('aria-label', 'Mapa krajů České republiky s vyznačenou působností');
+
+      var defs = svg.append('defs');
+      var g1 = defs.append('linearGradient').attr('id','gY1').attr('x1','0').attr('y1','0').attr('x2','1').attr('y2','1');
+      g1.append('stop').attr('offset','0%').attr('stop-color','#ffd257');
+      g1.append('stop').attr('offset','100%').attr('stop-color','#e8a916');
+      var g2 = defs.append('linearGradient').attr('id','gY2').attr('x1','0').attr('y1','0').attr('x2','1').attr('y2','1');
+      g2.append('stop').attr('offset','0%').attr('stop-color','#f9c53a');
+      g2.append('stop').attr('offset','100%').attr('stop-color','#d18e0c');
+      var filter = defs.append('filter').attr('id','softShadow').attr('x','-30%').attr('y','-30%').attr('width','160%').attr('height','160%');
+      filter.append('feDropShadow').attr('dx',0).attr('dy',3).attr('stdDeviation',6).attr('flood-color','#f4b71a').attr('flood-opacity',0.4);
+
+      var projection = d3.geoMercator().fitExtent([[20,20],[width-20,height-20]], geo);
+      var path = d3.geoPath().projection(projection);
+
+      svg.selectAll('path.kraj')
+        .data(geo.features)
+        .enter().append('path')
+        .attr('class','kraj')
+        .attr('d', path)
+        .attr('fill', function(d){
+          var name = d.properties.name || d.properties.NAME_1 || d.properties.NAME || '';
+          return isTarget(name) ? 'url(#gY1)' : '#28282c';
+        })
+        .attr('stroke', '#0b0b0c')
+        .attr('stroke-width', 1.5)
+        .attr('stroke-linejoin','round')
+        .attr('filter', function(d){
+          var name = d.properties.name || d.properties.NAME_1 || d.properties.NAME || '';
+          return isTarget(name) ? 'url(#softShadow)' : null;
+        });
+
+      svg.selectAll('text.kraj-label')
+        .data(geo.features)
+        .enter().append('text')
+        .attr('class','kraj-label')
+        .attr('x', function(d){ return path.centroid(d)[0]; })
+        .attr('y', function(d){ return path.centroid(d)[1]; })
+        .attr('text-anchor','middle')
+        .attr('font-family',"'IBM Plex Mono', monospace")
+        .attr('font-size', function(d){
+          var name = d.properties.name || d.properties.NAME_1 || d.properties.NAME || '';
+          return isTarget(name) ? '13px' : '9px';
+        })
+        .attr('font-weight', function(d){
+          var name = d.properties.name || d.properties.NAME_1 || d.properties.NAME || '';
+          return isTarget(name) ? '700' : '600';
+        })
+        .attr('fill', function(d){
+          var name = d.properties.name || d.properties.NAME_1 || d.properties.NAME || '';
+          return isTarget(name) ? '#0b0b0c' : '#7a7a76';
+        })
+        .text(function(d){
+          var name = d.properties.name || d.properties.NAME_1 || d.properties.NAME || '';
+          return name.replace(/kraj/i,'').trim();
+        });
+
+      container.querySelector('.map-loading').remove();
+    })
+    .catch(function(err){
+      container.innerHTML = '<div class="map-loading">Mapu se nepodařilo načíst. <a href="https://mapy.cz/zakladni?x=17.6&y=49.7&z=8" target="_blank" rel="noopener" style="color:var(--yellow);">Zobrazit na Mapy.cz</a></div>';
+      console.error(err);
+    });
+})();
+</script>
 
 <section id="kontakt">
   <div class="wrap contact-grid">
